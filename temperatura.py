@@ -15,7 +15,6 @@ from pyspark.sql.types import StringType, StructType, StructField
 r = requests.get('http://144.202.34.148:4002/api/sensor')
 #alamacena los datos en la variable
 Respuesta = r.text
-#print("toda",Respuesta)
 
 spark = SparkSession \
     .builder \
@@ -25,7 +24,7 @@ spark = SparkSession \
 #contexto de spark representando la conexion al cluster spark
 sc = spark.sparkContext
 
-#convertir Json a dataframe
+#convertir Json obtenido del servidor de la api a dataframe
 jsonStrings = [Respuesta]
 #se crea un RDD en base a la coleccion de datos existentes con parallelize
 otherPeopleRDD = sc.parallelize(jsonStrings)
@@ -35,8 +34,8 @@ otherPeople = spark.read.json(otherPeopleRDD)
 otherPeople.printSchema()
 otherPeople.createOrReplaceTempView("temperatura")
 #obtener los datos de la tabla dentro del rango de fecha
-spark.sql("select * from temperatura where fecha between '2020-12-11T03:15:45.208Z' and '2020-12-11T03:16:08.673Z'").show
+spark.sql("select * from temperatura where fecha between '2020-12-11T23:44:06.336Z' and '2020-12-11T23:46:51.447Z'").show()
 #obtener maxima, minima, media de temperatura dentro del rango de fecha
-spark.sql("select max (temperatura), min (temperatura), avg (temperatura) from temperatura where fecha between '2020-12-11T03:15:45.208Z' and '2020-12-11T03:16:08.673Z'").show()
+spark.sql("select max (temperatura), min (temperatura), avg (temperatura) from temperatura where fecha between '2020-12-11T23:44:06.336Z' and '2020-12-11T23:46:51.447Z'").show()
 
 spark.stop()
